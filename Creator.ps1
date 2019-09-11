@@ -34,6 +34,11 @@ Echo "MKDIR "D:\SystrackDB\""
 ) >> C:\Seal\SealScript.ps1
 
 
+REM ##### VMware Tools cleanup #####
+IF EXIST %VMware% (Echo "RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q"
+) >> C:\Seal\SealScript.PS1
+
+
 REM ##### insert general seal up script options #####
 
 Echo "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c" >> c:\Seal\Sealscript.ps1
