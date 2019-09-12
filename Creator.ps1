@@ -48,3 +48,11 @@ Echo "wmic pagefileset where name="C:\\pagefile.sys" delete" >> c:\Seal\SealScri
 Echo "wmic pagefileset create name="D:\pagefile.sys"" >> c:\Seal\SealScript
 Echo "wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,MaximumSize=8096" >> c:\Seal\SealScript
 	Pause
+	
+	
+	
+	##### Sample Scriptlets #####
+	##### powershell set variable #####
+	# $variable = "location" 
+	##### powershell check location exists #####
+	# test-path -path $variable
