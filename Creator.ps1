@@ -9,6 +9,10 @@ Set Ivanti="C:\Program Files\AppSense\environment Manager\Agent\ENUser.exe"
 Set VMware="C:\Program Files\VMware\VMware Tools\vmtoolsd.exe"
 Set Systrack="C:\Program Files (x86)\Systrack\LsiAgent\LSiAgent.exe"
 
+REM OS version check
+$os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
+
+
 
 REM ##### Create bare Seal Script Folder ####
 MD C:\Seal 
@@ -47,13 +51,24 @@ Echo "##### Pagefile settings #####" >> c:\Seal\SealScript
 Echo "wmic pagefileset where name="C:\\pagefile.sys" delete" >> c:\Seal\SealScript
 Echo "wmic pagefileset create name="D:\pagefile.sys"" >> c:\Seal\SealScript
 Echo "wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,MaximumSize=8096" >> c:\Seal\SealScript
+	
+##### OS Specific Generalisations for Server 2016 #####
+:Server2016
+
+##### OS Specific Generalisations for Server 2019 #####
+:Server2019 
+
+##### OS Specific Generalisations for Windows 10 #####
+:Windows10
+
+	
 	Pause
 	
 	
 	
 	##### Sample Scriptlets #####
 	##### powershell set variable #####
-	# $variable = "location" 
+	# $variable = "location" #
 	##### powershell check location exists #####
 	# test-path -path $variable # 
 	##### Capture OS Version #####
