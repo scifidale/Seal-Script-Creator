@@ -55,4 +55,7 @@ Echo "wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,Maximum
 	##### powershell set variable #####
 	# $variable = "location" 
 	##### powershell check location exists #####
-	# test-path -path $variable
+	# test-path -path $variable # 
+	##### Capture OS Version #####
+	# Get-CimInstance Win32_OperatingSystem | select -expand Caption  # 
+	
