@@ -1,6 +1,9 @@
 
 
 REM Variable enteries
+
+Set Sealloc="C:\Seal\Sealscript.ps1"
+
 Set Citrix="C:\Program Files\Citrix\Virtual Desktop  Agent\VDA.exe"
 Set CitrixPVS="C:\Program Files\Citrix\Provisioning Services\StatusTray.exe"
 set test="C:\bdlog.txt"
@@ -22,6 +25,10 @@ Echo "EEC Services Seal Script" >> C:\Seal\sealscript.ps1
 
 If exist %test% (echo hellow >> "c:\UserGuidePDF\test.txt") Else ( REM File doesnt exist )
 
+
+REM ##### Citrix provisioning Services actions #####
+If Exist %CitrixPVS% ( 
+Echo "REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DisableTaskOffload" /t "REG_DWORD" /d "0x1" /f" >> $Sealloc
 
 REM ##### Scan for Systrack Agent #####
 if Exist %Systrack% (
@@ -46,7 +53,7 @@ IF EXIST %VMware% (Echo "RD "C:\Programdata\Microsoft\Windows\start Menu\Program
 REM ##### insert general seal up script options #####
 
 Echo "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c" >> c:\Seal\Sealscript.ps1
-Echo "powershell.exe -noprofile -executionpolicy bypass -command "wevtutil el | Foreach-Object {wevtutil cl "$_"}"" >> c:\Seal\SealScript.ps1
+Echo "powershell.exe -noprofile -executionpolicy bypass -command "wevtutil el | Foreach-Object {wevtutil cl "$_"}"" >> $Sealloc
 Echo "##### Pagefile settings #####" >> c:\Seal\SealScript
 Echo "wmic pagefileset where name="C:\\pagefile.sys" delete" >> c:\Seal\SealScript
 Echo "wmic pagefileset create name="D:\pagefile.sys"" >> c:\Seal\SealScript
@@ -73,4 +80,6 @@ Echo "wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,Maximum
 	# test-path -path $variable # 
 	##### Capture OS Version #####
 	# Get-CimInstance Win32_OperatingSystem | select -expand Caption  # 
+	##### Powershell output to seal script #####
+	#write-output "test2" | Out-file -filepath $sealloc -append #
 	
