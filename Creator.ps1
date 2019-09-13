@@ -2,15 +2,17 @@
 
 REM Variable enteries
 
-Set Sealloc="C:\Seal\Sealscript.ps1"
 
-Set Citrix="C:\Program Files\Citrix\Virtual Desktop  Agent\VDA.exe"
-Set CitrixPVS="C:\Program Files\Citrix\Provisioning Services\StatusTray.exe"
-set test="C:\bdlog.txt"
-Set FSLOGIX="c:\Program Files\FSLigix\Apps\frx.exe"
-Set Ivanti="C:\Program Files\AppSense\environment Manager\Agent\ENUser.exe"
-Set VMware="C:\Program Files\VMware\VMware Tools\vmtoolsd.exe"
-Set Systrack="C:\Program Files (x86)\Systrack\LsiAgent\LSiAgent.exe"
+$SealFolder = "C:\Seal"
+$SealFile = "SealScript.ps1"
+
+$Citrix = "C:\Program Files\Citrix\Virtual Desktop  Agent\VDA.exe"
+$CitrixPVS = "C:\Program Files\Citrix\Provisioning Services\StatusTray.exe"
+$test = "C:\bdlog.txt"
+$FSLOGIX = "c:\Program Files\FSLigix\Apps\frx.exe"
+$Ivanti = "C:\Program Files\AppSense\environment Manager\Agent\ENUser.exe"
+$VMware = "C:\Program Files\VMware\VMware Tools\vmtoolsd.exe"
+$Systrack = "C:\Program Files (x86)\Systrack\LsiAgent\LSiAgent.exe"
 
 REM OS version check
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
@@ -18,17 +20,19 @@ $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
 
 
 REM ##### Create bare Seal Script Folder ####
-MD C:\Seal 
-Copy NUL > c:\Seal\SealScript.PS1
+New-Item -path $SealFolder -ItemType Directory
+New-Item -path $SealFolder\$SealFile
+
+
 REM ##### Citrix Gneralisation Phase #####
 Echo "EEC Services Seal Script" >> C:\Seal\sealscript.ps1
 
-If exist %test% (echo hellow >> "c:\UserGuidePDF\test.txt") Else ( REM File doesnt exist )
 
 
 REM ##### Citrix provisioning Services actions #####
-If Exist %CitrixPVS% ( 
-Echo "REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DisableTaskOffload" /t "REG_DWORD" /d "0x1" /f" >> $Sealloc
+If (test-path "$CitrixPVS") {
+Echo "REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters /V DisableTaskOffload /t REG_DWORD /d 0x1 /f" >> $SealFolder\$SealFile
+}
 
 REM ##### Scan for Systrack Agent #####
 if Exist %Systrack% (
@@ -77,7 +81,9 @@ Echo "wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,Maximum
 	##### powershell set variable #####
 	# $variable = "location" #
 	##### powershell check location exists #####
-	# test-path -path $variable # 
+	# If (test-path "$CitrixPVS") {
+	Echo "REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters /V DisableTaskOffload /t REG_DWORD /d 0x1 /f" >> $SealFolder\$SealFile
+	} # 
 	##### Capture OS Version #####
 	# Get-CimInstance Win32_OperatingSystem | select -expand Caption  # 
 	##### Powershell output to seal script #####
