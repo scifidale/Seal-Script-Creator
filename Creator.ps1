@@ -1,6 +1,6 @@
 
 
-REM Variable enteries
+##### Variable enteries #####
 
 
 $SealFolder = "C:\Seal"
@@ -14,28 +14,29 @@ $Ivanti = "C:\bdlog.txt"
 $VMware = "C:\bdlog.txt"
 $Systrack = "C:\bdlog.txt"
 
-REM OS version check
+##### OS version check #####
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
 
 
 
-REM ##### Create bare Seal Script Folder ####
+##### Create bare Seal Script Folder ####
 New-Item -path $SealFolder -ItemType Directory
 New-Item -path $SealFolder\$SealFile
 
 
-REM ##### Citrix Generalisation Phase #####
+##### Citrix Generalisation Phase #####
 Echo "EEC Services Seal Script" >> $SealFolder\$SealFile
+Add-Content -path $SealFolder\$SealFile -value ""
 
 
-
-REM ##### Citrix provisioning Services actions #####
+##### Citrix provisioning Services actions #####
 If (test-path "$CitrixPVS") {
 Echo 'REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters /V DisableTaskOffload /t REG_DWORD /d 0x1 /f' >> $SealFolder\$SealFile
 Echo 'Del "C:\Program Data\Citrix\Provisioning Services\Log\*.* /F/Q"' >> $SealFolder\$SealFile
 }
+Add-Content -path $SealFolder\$SealFile -value ""
 
-REM ##### Scan for Systrack Agent #####
+##### Scan for Systrack Agent #####
 if (test-path "$Systrack") {
 Echo "Net Stop LsiAgent" >> $SealFolder\$SealFile
 Echo 'REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Lakeside Software\Deploy" /v SystemName /f' >> $SealFolder\$SealFile
@@ -48,32 +49,39 @@ Echo 'del D:\SystrackDB\*.* /q /s' >> $SealFolder\$SealFile
 Echo 'RMDIR D:\SystrackDB\ /s /q' >> $SealFolder\$SealFile
 Echo 'MKDIR D:\SystrackDB\' >> $SealFolder\$SealFile
  }
+Add-Content -path $SealFolder\$SealFile -value ""
 
+##### VMware Tools cleanup #####
+IF (Test-Path "$VMware") {Echo 'RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q' >> $SealFolder\$SealFile }
+Add-Content -path $SealFolder\$SealFile -value ""
 
-REM ##### VMware Tools cleanup #####
-IF (Test-Path "$VMware") {Echo "RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q" >> $SealFolder\$SealFile }
-
-
-REM ##### insert general seal up script options #####
+##### insert general seal up script options #####
 
 Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
-Echo "powershell.exe -noprofile -executionpolicy bypass -command "wevtutil el | Foreach-Object {wevtutil cl "$_"}"" >> $SealFolder\$SealFile
+Echo 'powershell.exe -noprofile -executionpolicy bypass -command "wevtutil el | Foreach-Object {wevtutil cl "$_"}"' >> $SealFolder\$SealFile
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset create name="D:\pagefile.sys"' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,MaximumSize=8096' >> $SealFolder\$SealFile
+Add-Content -path $SealFolder\$SealFile -value ""
 	
 ##### OS Specific Generalisations for Server 2016 #####
-:Server2016
+IF ($OS -eq "Microsoft Windows Server 2016") {
+
+}
 
 ##### OS Specific Generalisations for Server 2019 #####
-:Server2019 
+IF ($OS -eq "Microsoft Windows Server 2019") {
+
+}
 
 ##### OS Specific Generalisations for Windows 10 #####
-:Windows10
+IF ($OS -eq "Microsoft Windows 10 Home") {
+
+}
 
 	
-	Pause
+
 	
 	
 	
@@ -81,9 +89,7 @@ Echo 'wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,Maximum
 	##### powershell set variable #####
 	# $variable = "location" #
 	##### powershell check location exists #####
-	# If (test-path "$CitrixPVS") {
-	Echo "REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters /V DisableTaskOffload /t REG_DWORD /d 0x1 /f" >> $SealFolder\$SealFile
-	} # 
+	# If (test-path "$CitrixPVS") {Echo "REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters /V DisableTaskOffload /t REG_DWORD /d 0x1 /f" >> $SealFolder\$SealFile} # 
 	##### Capture OS Version #####
 	# Get-CimInstance Win32_OperatingSystem | select -expand Caption  # 
 	##### Powershell output to seal script #####
