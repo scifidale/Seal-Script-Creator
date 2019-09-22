@@ -7,6 +7,7 @@ $SealFolder = "C:\Seal"
 $SealFile = "SealScript.ps1"
 
 $Citrix = "C:\bdlog.txt"
+$CitrixVDA = "C:\bdlog.txt"
 $CitrixPVS = "C:\bdlog.txt"
 $test = "C:\bdlog.txt"
 $FSLOGIX = "C:\bdlog.txt"
@@ -35,6 +36,11 @@ Echo 'REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Paramet
 Echo 'Del "C:\Program Data\Citrix\Provisioning Services\Log\*.* /F/Q"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
+If (Test-Path "$CitrixVDA") {
+Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.log"' >> $SealFolder\$SealFile
+Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.bak"' >> $SealFolder\$SealFile
+}
+Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Scan for Systrack Agent #####
 if (test-path "$Systrack") {
@@ -55,9 +61,25 @@ Add-Content -path $SealFolder\$SealFile -value ""
 IF (Test-Path "$VMware") {Echo 'RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q' >> $SealFolder\$SealFile }
 Add-Content -path $SealFolder\$SealFile -value ""
 
+##### Ivanti Sealup Actions #####
+IF (test-path "$Ivanti") {
+Echo '"C:\Program Files\AppSense\Management Center\Communications Agent\CcaCmd.exe" /imageprep' >> $SealFolder\$SealFile
+Echo 'sc config "AppSense Client Communications Agent" start=disabled' >> $SealFolder\$SealFile
+Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\CtxHook" /V "ExcludedImageNames" /t REG_SZ /d "AMAgent.exe,Cca.exe,WatchdogAgent.exe,WatchdogAgent64.exe,EMAgent.exe,EMAgentAssist.exe,EMNotify.exe,EmCoreService.exe,EmExit.exe,EmLoggedOnUser.exe,EmSystem.exe,EmUser.exe,EmUserLogoff.exe,PmAgent.exe,PmAgentAssist.exe" /f' >> $SealFolder\$SealFile
+Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Citrix\CtxHook" /V "ExcludedImageNames" /t REG_SZ /d "AMAgent.exe,Cca.exe,WatchdogAgent.exe,WatchdogAgent64.exe,EMAgent.exe,EMAgentAssist.exe,EMNotify.exe,EmCoreService.exe,EmExit.exe,EmLoggedOnUser.exe,EmSystem.exe,EmUser.exe,EmUserLogoff.exe,PmAgent.exe,PmAgentAssist.exe" /f' >> $SealFolder\$SealFile
+Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Citrix\CtxHook64" /V "ExcludedImageNames" /t REG_SZ /d "AMAgent.exe,Cca.exe,WatchdogAgent.exe,WatchdogAgent64.exe,EMAgent.exe,EMAgentAssist.exe,EMNotify.exe,EmCoreService.exe,EmExit.exe,EmLoggedOnUser.exe,EmSystem.exe,EmUser.exe,EmUserLogoff.exe,PmAgent.exe,PmAgentAssist.exe" /f' >> $SealFolder\$SealFile
+
+}
+Add-Content -path $SealFolder\$SealFile -value ""
+
+##### Symantec Endpoint Protection #####
+IF (Test-Path "$SymantecEP") {
+Echo '"C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe" -stop' >> $SealFolder\$SealFile
+Echo '"$SealFolder\$SealFile\ClientSideClonePrepTool.exe' >> $SealFolder\SealFile
+}
+Add-Content -path $SealFolder\$SealFile -value ""
 ##### insert general seal up script options #####
 
-Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
 Echo 'powershell.exe -noprofile -executionpolicy bypass -command "wevtutil el | Foreach-Object {wevtutil cl "$_"}"' >> $SealFolder\$SealFile
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
@@ -77,7 +99,7 @@ IF ($OS -eq "Microsoft Windows Server 2019") {
 
 ##### OS Specific Generalisations for Windows 10 #####
 IF ($OS -eq "Microsoft Windows 10 Home") {
-
+Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
 }
 
 	
