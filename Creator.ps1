@@ -1,6 +1,7 @@
 
 
 ##### Variable enteries #####
+##### Enter execution path here #####
 
 
 $SealFolder = "C:\Seal"
@@ -14,6 +15,7 @@ $FSLOGIX = "C:\bdlog.txt"
 $Ivanti = "C:\bdlog.txt"
 $VMware = "C:\bdlog.txt"
 $Systrack = "C:\bdlog.txt"
+$SymantecEP = "C:\bdlog.txt"
 
 ##### OS version check #####
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
@@ -28,15 +30,17 @@ New-Item -path $SealFolder\$SealFile
 ##### Citrix Generalisation Phase #####
 Echo "EEC Services Seal Script" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
-
+Echo "$PSScriptRoot" >> $Sealfolder\$SealFile
 
 ##### Citrix provisioning Services actions #####
 If (test-path "$CitrixPVS") {
+Echo '##### Citrix Provisioning Services Generalisation #####' >> $SealFolder\$SealFile
 Echo 'REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters /V DisableTaskOffload /t REG_DWORD /d 0x1 /f' >> $SealFolder\$SealFile
 Echo 'Del "C:\Program Data\Citrix\Provisioning Services\Log\*.* /F/Q"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 If (Test-Path "$CitrixVDA") {
+Echo '##### Citrix VDA Generalisation #####' >> $SealFolder\$SealFile
 Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.log"' >> $SealFolder\$SealFile
 Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.bak"' >> $SealFolder\$SealFile
 }
@@ -44,6 +48,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Scan for Systrack Agent #####
 if (test-path "$Systrack") {
+Echo '##### LakeSide Systrack Generalisation #####' >> $SealFolder\$SealFile
 Echo "Net Stop LsiAgent" >> $SealFolder\$SealFile
 Echo 'REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Lakeside Software\Deploy" /v SystemName /f' >> $SealFolder\$SealFile
 Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Lakeside Software\Deploy" /v SystemName /t REG_SZ' >> $SealFolder\$SealFile
@@ -58,11 +63,14 @@ Echo 'MKDIR D:\SystrackDB\' >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### VMware Tools cleanup #####
-IF (Test-Path "$VMware") {Echo 'RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q' >> $SealFolder\$SealFile }
+IF (Test-Path "$VMware") {
+Echo '##### Remove VMware Tools Menu Icon #####' >> $SealFolder\$SealFile
+Echo 'RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q' >> $SealFolder\$SealFile }
 Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Ivanti Sealup Actions #####
 IF (test-path "$Ivanti") {
+Echo '##### Ivanti Generalisation #####' >> $SealFolder\$SealFile
 Echo '"C:\Program Files\AppSense\Management Center\Communications Agent\CcaCmd.exe" /imageprep' >> $SealFolder\$SealFile
 Echo 'sc config "AppSense Client Communications Agent" start=disabled' >> $SealFolder\$SealFile
 Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\CtxHook" /V "ExcludedImageNames" /t REG_SZ /d "AMAgent.exe,Cca.exe,WatchdogAgent.exe,WatchdogAgent64.exe,EMAgent.exe,EMAgentAssist.exe,EMNotify.exe,EmCoreService.exe,EmExit.exe,EmLoggedOnUser.exe,EmSystem.exe,EmUser.exe,EmUserLogoff.exe,PmAgent.exe,PmAgentAssist.exe" /f' >> $SealFolder\$SealFile
@@ -74,12 +82,14 @@ Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Symantec Endpoint Protection #####
 IF (Test-Path "$SymantecEP") {
+Copy "$PSScriptRoot\ClientSideClinePrepTool.exe" $SealFolder  
+Echo '##### Symantec Endpoint Protection Generalisation #####' >> $SealFolder\$SealFile
 Echo '"C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe" -stop' >> $SealFolder\$SealFile
-Echo '"$SealFolder\$SealFile\ClientSideClonePrepTool.exe' >> $SealFolder\SealFile
+Echo '"ClientSideClonePrepTool.exe"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 ##### insert general seal up script options #####
-
+Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
 Echo 'powershell.exe -noprofile -executionpolicy bypass -command "wevtutil el | Foreach-Object {wevtutil cl "$_"}"' >> $SealFolder\$SealFile
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
@@ -103,7 +113,7 @@ Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFold
 }
 
 	
-
+Pause
 	
 	
 	
