@@ -16,6 +16,8 @@ $Ivanti = "C:\bdlog.txt"
 $VMware = "C:\bdlog.txt"
 $Systrack = "C:\bdlog.txt"
 $SymantecEP = "C:\bdlog.txt"
+$TrendOS = "C:\bdlog.txt"
+$SCCM = "C:\bdlog.txt"
 
 ##### OS version check #####
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
@@ -43,6 +45,12 @@ If (Test-Path "$CitrixVDA") {
 Echo '##### Citrix VDA Generalisation #####' >> $SealFolder\$SealFile
 Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.log"' >> $SealFolder\$SealFile
 Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.bak"' >> $SealFolder\$SealFile
+}
+Add-Content -path $SealFolder\$SealFile -value ""
+
+If (Test-Path "$FSLogix") {
+Echo '##### FSLogix Generalisation #####' >> $SealFolder\$SealFile
+Echo 'del "C:\Program Files\FSLogix\Apps\Logs\*.log"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
@@ -88,6 +96,20 @@ Echo '"C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe" -st
 Echo '"ClientSideClonePrepTool.exe"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
+
+##### Trend OfficeScan #####
+IF (Test-Path "$TrendOS") {
+Copy "$PSScriptRoot\ImgSetup.exe" $SealFolder  
+Echo '##### Trend OfficeScan Generalisation #####' >> $SealFolder\$SealFile
+Echo "$SealFolder\ImgSetup.exe" >> $SealFolder\$SealFile
+}
+Add-Content -path $SealFolder\$SealFile -value ""
+
+##### Default user logon image #####
+Copy $PSScriptRoot\user-192.jpg $SealFolder 
+Echo "#####Setting default user logon image#####" >> $SealFolder\$SealFile
+Echo "Copy $SealFolder\User-192.png 'C:\programdata\Microsoft\User Account Pictures\'" >> $SealFolder\$SealFile
+
 ##### insert general seal up script options #####
 Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
 Echo 'powershell.exe -noprofile -executionpolicy bypass -command "wevtutil el | Foreach-Object {wevtutil cl "$_"}"' >> $SealFolder\$SealFile
@@ -112,7 +134,10 @@ IF ($OS -eq "Microsoft Windows 10 Home") {
 Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
 }
 
-	
+##### Shutdown the image #####
+Echo "Shutting down the Image" >> $SealFolder\$SealFile
+Echo "Shutdown -s -t 60" >> $SealFolder\$SealFile
+
 Pause
 	
 	
