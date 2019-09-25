@@ -19,6 +19,7 @@ $Systrack = "C:\bdlog.txt"
 $SymantecEP = "C:\bdlog.txt"
 $TrendOS = "C:\bdlog.txt"
 $SCCM = "C:\bdlog.txt"
+$SophosEP = "C:\BDlog.txt"
 
 ##### OS version check #####
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
@@ -89,8 +90,22 @@ Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Citrix\CtxHook64" /V "Exc
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
+################################################
+##########Antivirus Generalisation##############
+################################################
+
+
 ##### Symantec Endpoint Protection #####
 IF (Test-Path "$SymantecEP") {
+Copy "$PSScriptRoot\ClientSideClinePrepTool.exe" $SealFolder  
+Echo '##### Symantec Endpoint Protection Generalisation #####' >> $SealFolder\$SealFile
+Echo '"C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe" -stop' >> $SealFolder\$SealFile
+Echo '"ClientSideClonePrepTool.exe"' >> $SealFolder\$SealFile
+}
+Add-Content -path $SealFolder\$SealFile -value ""
+
+##### Sophos Endpoint Agent #####
+IF (Test-Path "$SophosEP") {
 Copy "$PSScriptRoot\ClientSideClinePrepTool.exe" $SealFolder  
 Echo '##### Symantec Endpoint Protection Generalisation #####' >> $SealFolder\$SealFile
 Echo '"C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe" -stop' >> $SealFolder\$SealFile
