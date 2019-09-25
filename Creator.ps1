@@ -130,12 +130,13 @@ IF ($OS -eq "Microsoft Windows Server 2019") {
 }
 
 ##### OS Specific Generalisations for Windows 10 #####
-IF ($OS -eq "Microsoft Windows 10 Home") {
+IF ($OS -eq "Microsoft Windows 10 Pro" -or "Microsoft Windos 10 Enterprise" -or "Microsoft Windows 10 Home") {
+Echo "##### Setting High Performance Mode #####" >> $SealFolder\$SealFile
 Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
 }
 
 ##### Shutdown the image #####
-Echo "Shutting down the Image" >> $SealFolder\$SealFile
+Echo "##### Shutting down the Image #####" >> $SealFolder\$SealFile
 Echo "Shutdown -s -t 60" >> $SealFolder\$SealFile
 
 Pause
