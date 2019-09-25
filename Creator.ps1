@@ -6,6 +6,7 @@
 
 $SealFolder = "C:\Seal"
 $SealFile = "SealScript.ps1"
+$CompanyName = "EEC Services"
 
 $Citrix = "C:\bdlog.txt"
 $CitrixVDA = "C:\bdlog.txt"
@@ -30,7 +31,7 @@ New-Item -path $SealFolder\$SealFile
 
 
 ##### Citrix Generalisation Phase #####
-Echo "EEC Services Seal Script" >> $SealFolder\$SealFile
+Echo "$CompanyName Seal Script" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 Echo "$PSScriptRoot" >> $Sealfolder\$SealFile
 
@@ -109,10 +110,12 @@ Add-Content -path $SealFolder\$SealFile -value ""
 Copy $PSScriptRoot\user-192.jpg $SealFolder 
 Echo "#####Setting default user logon image#####" >> $SealFolder\$SealFile
 Echo "Copy $SealFolder\User-192.png 'C:\programdata\Microsoft\User Account Pictures\'" >> $SealFolder\$SealFile
+Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### insert general seal up script options #####
 Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
 Echo 'powershell.exe -noprofile -executionpolicy bypass -command "wevtutil el | Foreach-Object {wevtutil cl "$_"}"' >> $SealFolder\$SealFile
+Add-Content -path $SealFolder\$SealFile -value ""
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset create name="D:\pagefile.sys"' >> $SealFolder\$SealFile
@@ -134,6 +137,7 @@ IF ($OS -eq "Microsoft Windows 10 Pro" -or "Microsoft Windos 10 Enterprise" -or 
 Echo "##### Setting High Performance Mode #####" >> $SealFolder\$SealFile
 Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
 }
+Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Shutdown the image #####
 Echo "##### Shutting down the Image #####" >> $SealFolder\$SealFile
