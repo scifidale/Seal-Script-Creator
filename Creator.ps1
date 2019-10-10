@@ -56,6 +56,11 @@ Echo 'del "C:\Program Files\FSLogix\Apps\Logs\*.log"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
+
+################################################
+##########Monitoring Tool Generalisation########
+################################################
+
 ##### Scan for Systrack Agent #####
 if (test-path "$Systrack") {
 Echo '##### LakeSide Systrack Generalisation #####' >> $SealFolder\$SealFile
@@ -89,6 +94,16 @@ Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Citrix\CtxHook64" /V "Exc
 
 }
 Add-Content -path $SealFolder\$SealFile -value ""
+
+##### Citrix WEM Sealup Actions #####
+IF (test-path "$WEM") {
+Echo '##### Citrix WEM Generalisation #####' >> $SealFolder\$SealFile
+Echo 'Net Stop "Citrix WEM Agent Host Service"' >> $SealFolder\$SealFile
+Echo '"del %PROGRAMFILES(X86)%\Norskale\Norskale Agent Host\*.log /Q' >> $SealFolder\$SealFile
+Echo 'del c:\trace\*.svclog /Q' >> $SealFolder\$SealFile
+}
+Add-Content -path $SealFolder\$SealFile -value ""
+
 
 ################################################
 ##########Antivirus Generalisation##############
