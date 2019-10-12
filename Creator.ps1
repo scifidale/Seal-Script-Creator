@@ -11,6 +11,7 @@ $CompanyName = "EEC Services"
 $Citrix = "C:\bdlog.txt"
 $CitrixVDA = "C:\bdlog.txt"
 $CitrixPVS = "C:\bdlog.txt"
+$WEM = "C:\bdlog.txt"
 $test = "C:\bdlog.txt"
 $FSLOGIX = "C:\bdlog.txt"
 $Ivanti = "C:\bdlog.txt"
@@ -26,15 +27,20 @@ $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
 
 
 
-##### Create bare Seal Script Folder ####
+##### Create bare Seal Script Folder and File ####
 New-Item -path $SealFolder -ItemType Directory
 New-Item -path $SealFolder\$SealFile
 
 
-##### Citrix Generalisation Phase #####
+
+##### Generalisation Phase #####
 Echo "$CompanyName Seal Script" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 Echo "$PSScriptRoot" >> $Sealfolder\$SealFile
+
+################################################
+##########Citrix Stack Generalisation###########
+################################################
 
 ##### Citrix provisioning Services actions #####
 If (test-path "$CitrixPVS") {
@@ -119,11 +125,17 @@ Echo '"ClientSideClonePrepTool.exe"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
+##### Mcafee Agent 5.x #####
+IF (Test-Path "$McafeeEP") {
+Echo '##### Mcafee Agent Generalisation #####' >> $SealFolder\$SealFile
+Echo '"C:\Program Files\McAfee\Agent\maconfig -enforce -noguid"' >> $SealFolder\$SealFile
+}
+Add-Content -path $SealFolder\$SealFile -value ""
+
 ##### Sophos Endpoint Agent #####
 IF (Test-Path "$SophosEP") {
-Copy "$PSScriptRoot\ClientSideClinePrepTool.exe" $SealFolder  
 Echo '##### Symantec Endpoint Protection Generalisation #####' >> $SealFolder\$SealFile
-Echo '"C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe" -stop' >> $SealFolder\$SealFile
+Echo 'Net Stop "Sophos Autoupdate Service"' >> $SealFolder\$SealFile
 Echo '"ClientSideClonePrepTool.exe"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
@@ -154,12 +166,14 @@ Add-Content -path $SealFolder\$SealFile -value ""
 	
 ##### OS Specific Generalisations for Server 2016 #####
 IF ($OS -eq "Microsoft Windows Server 2016") {
-
+Echo "##### Setting High Performance Mode #####" >> $SealFolder\$SealFile
+Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
 }
 
 ##### OS Specific Generalisations for Server 2019 #####
 IF ($OS -eq "Microsoft Windows Server 2019") {
-
+Echo "##### Setting High Performance Mode #####" >> $SealFolder\$SealFile
+Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
 }
 
 ##### OS Specific Generalisations for Windows 10 #####
