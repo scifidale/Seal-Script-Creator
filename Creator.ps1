@@ -21,6 +21,7 @@ $SymantecEP = "C:\bdlog.txt"
 $TrendOS = "C:\bdlog.txt"
 $SCCM = "C:\bdlog.txt"
 $SophosEP = "C:\BDlog.txt"
+$UberAgent = "C:\BDLOg.txt"
 
 ##### OS version check #####
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
@@ -80,6 +81,14 @@ Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Lakeside Software\LsiAgen
 Echo 'del D:\SystrackDB\*.* /q /s' >> $SealFolder\$SealFile
 Echo 'RMDIR D:\SystrackDB\ /s /q' >> $SealFolder\$SealFile
 Echo 'MKDIR D:\SystrackDB\' >> $SealFolder\$SealFile
+ }
+Add-Content -path $SealFolder\$SealFile -value ""
+
+if (test-path "$UberAgent") {
+Echo '##### UberAgent Generalisation #####' >> $SealFolder\$SealFile
+Echo "Net Stop uberAgent" >> $SealFolder\$SealFile
+Echo 'REG DELETE “HKLM\SOFTWARE\vast limits\uberAgent” /f /reg:64' >> $SealFolder\$SealFile
+
  }
 Add-Content -path $SealFolder\$SealFile -value ""
 
