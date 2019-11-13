@@ -19,6 +19,7 @@ $VMware = "C:\bdlog.txt"
 $Systrack = "C:\bdlog.txt"
 $SymantecEP = "C:\bdlog.txt"
 $TrendOS = "C:\bdlog.txt"
+$MCafeeEP = "C:\bdlog.txt"
 $SCCM = "C:\bdlog.txt"
 $SophosEP = "C:\BDlog.txt"
 $UberAgent = "C:\BDLOg.txt"
@@ -114,7 +115,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 IF (test-path "$WEM") {
 Echo '##### Citrix WEM Generalisation #####' >> $SealFolder\$SealFile
 Echo 'Net Stop "Citrix WEM Agent Host Service"' >> $SealFolder\$SealFile
-Echo '"del %PROGRAMFILES(X86)%\Norskale\Norskale Agent Host\*.log /Q' >> $SealFolder\$SealFile
+Echo '"del %PROGRAMFILES(X86)%\Norskale\Norskale Agent Host\*.log /Q"' >> $SealFolder\$SealFile
 Echo 'del c:\trace\*.svclog /Q' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
@@ -127,7 +128,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Symantec Endpoint Protection #####
 IF (Test-Path "$SymantecEP") {
-Copy "$PSScriptRoot\ClientSideClinePrepTool.exe" $SealFolder  
+Copy "$PSScriptRoot\Content\ClientSideClonePrepTool.exe" $SealFolder  
 Echo '##### Symantec Endpoint Protection Generalisation #####' >> $SealFolder\$SealFile
 Echo '"C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe" -stop' >> $SealFolder\$SealFile
 Echo '"ClientSideClonePrepTool.exe"' >> $SealFolder\$SealFile
@@ -151,14 +152,14 @@ Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Trend OfficeScan #####
 IF (Test-Path "$TrendOS") {
-Copy "$PSScriptRoot\ImgSetup.exe" $SealFolder  
+Copy "$PSScriptRoot\Content\ImgSetup.exe" $SealFolder  
 Echo '##### Trend OfficeScan Generalisation #####' >> $SealFolder\$SealFile
 Echo "$SealFolder\ImgSetup.exe" >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Default user logon image #####
-Copy $PSScriptRoot\user-192.jpg $SealFolder 
+Copy $PSScriptRoot\Content\user-192.png $SealFolder 
 Echo "#####Setting default user logon image#####" >> $SealFolder\$SealFile
 Echo "Copy $SealFolder\User-192.png 'C:\programdata\Microsoft\User Account Pictures\'" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
@@ -171,18 +172,22 @@ Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset create name="D:\pagefile.sys"' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,MaximumSize=8096' >> $SealFolder\$SealFile
+Echo 'Echo defragmenting the C Drive' >> $SealFolder\$SealFile
+Echo "defrag c: /v" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 	
 ##### OS Specific Generalisations for Server 2016 #####
 IF ($OS -eq "Microsoft Windows Server 2016") {
 Echo "##### Setting High Performance Mode #####" >> $SealFolder\$SealFile
 Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
+
 }
 
 ##### OS Specific Generalisations for Server 2019 #####
 IF ($OS -eq "Microsoft Windows Server 2019") {
 Echo "##### Setting High Performance Mode #####" >> $SealFolder\$SealFile
 Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFolder\$SealFile
+
 }
 
 ##### OS Specific Generalisations for Windows 10 #####
