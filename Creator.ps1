@@ -102,7 +102,8 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ##### Ivanti Sealup Actions #####
 IF (test-path "$Ivanti") {
 Echo '##### Ivanti Generalisation #####' >> $SealFolder\$SealFile
-Echo '"C:\Program Files\AppSense\Management Center\Communications Agent\CcaCmd.exe" /imageprep' >> $SealFolder\$SealFile
+Echo 'CD "C:\Program Files\AppSense\Management Center\Communications Agent\"' >> $SealFolder\$SealFile
+Echo './CCACMD.exe /Imageprep' >> $SealFolder\$SealFile
 Echo 'sc config "AppSense Client Communications Agent" start=disabled' >> $SealFolder\$SealFile
 Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\CtxHook" /V "ExcludedImageNames" /t REG_SZ /d "AMAgent.exe,Cca.exe,WatchdogAgent.exe,WatchdogAgent64.exe,EMAgent.exe,EMAgentAssist.exe,EMNotify.exe,EmCoreService.exe,EmExit.exe,EmLoggedOnUser.exe,EmSystem.exe,EmUser.exe,EmUserLogoff.exe,PmAgent.exe,PmAgentAssist.exe" /f' >> $SealFolder\$SealFile
 Echo 'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Citrix\CtxHook" /V "ExcludedImageNames" /t REG_SZ /d "AMAgent.exe,Cca.exe,WatchdogAgent.exe,WatchdogAgent64.exe,EMAgent.exe,EMAgentAssist.exe,EMNotify.exe,EmCoreService.exe,EmExit.exe,EmLoggedOnUser.exe,EmSystem.exe,EmUser.exe,EmUserLogoff.exe,PmAgent.exe,PmAgentAssist.exe" /f' >> $SealFolder\$SealFile
