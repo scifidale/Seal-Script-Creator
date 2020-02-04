@@ -36,7 +36,7 @@ New-Item -path $SealFolder\$SealFile
 
 
 ##### Generalisation Phase #####
-Echo "$CompanyName Seal Script" >> $SealFolder\$SealFile
+Echo "# $CompanyName Seal Script" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 # Echo "$PSScriptRoot" >> $Sealfolder\$SealFile#
 
@@ -96,7 +96,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ##### VMware Tools cleanup #####
 IF (Test-Path "$VMware") {
 Echo '##### Remove VMware Tools Menu Icon #####' >> $SealFolder\$SealFile
-Echo 'RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q' >> $SealFolder\$SealFile }
+Echo 'CMD /c RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q' >> $SealFolder\$SealFile }
 Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Ivanti Sealup Actions #####
@@ -167,7 +167,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### insert general seal up script options #####
 Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
-Echo "wevtutil el | Foreach-Object {wevtutil cl "$_"}" >> $SealFolder\$SealFile
+Echo 'wevtutil el | Foreach-Object {wevtutil cl "$_"}' >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
