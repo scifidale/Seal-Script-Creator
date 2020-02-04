@@ -202,7 +202,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 Echo "##### Shutting down the Image #####" >> $SealFolder\$SealFile
 Echo "Shutdown -s -t 60" >> $SealFolder\$SealFile
 
-Pause
+
 	
 	
 	
