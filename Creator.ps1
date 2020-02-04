@@ -38,7 +38,7 @@ New-Item -path $SealFolder\$SealFile
 ##### Generalisation Phase #####
 Echo "$CompanyName Seal Script" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
-Echo "$PSScriptRoot" >> $Sealfolder\$SealFile
+# Echo "$PSScriptRoot" >> $Sealfolder\$SealFile#
 
 ################################################
 ##########Citrix Stack Generalisation###########
