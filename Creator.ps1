@@ -51,6 +51,8 @@ Echo 'REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Paramet
 Echo 'Del "C:\Program Data\Citrix\Provisioning Services\Log\*.* /F/Q"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
+
+##### Citrix VDA UPM Generalisation #####
 If (Test-Path "$CitrixVDA") {
 Echo '##### Citrix VDA Generalisation #####' >> $SealFolder\$SealFile
 Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.log"' >> $SealFolder\$SealFile
@@ -88,7 +90,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 if (test-path "$UberAgent") {
 Echo '##### UberAgent Generalisation #####' >> $SealFolder\$SealFile
 Echo "Net Stop uberAgent" >> $SealFolder\$SealFile
-Echo 'REG DELETE “HKLM\SOFTWARE\vast limits\uberAgent” /f /reg:64' >> $SealFolder\$SealFile
+Echo 'REG DELETE "HKLM\SOFTWARE\vast limits\uberAgent" /f /reg:64' >> $SealFolder\$SealFile
 
  }
 Add-Content -path $SealFolder\$SealFile -value ""
@@ -116,7 +118,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 IF (test-path "$WEM") {
 Echo '##### Citrix WEM Generalisation #####' >> $SealFolder\$SealFile
 Echo 'Net Stop "Citrix WEM Agent Host Service"' >> $SealFolder\$SealFile
-Echo '"del %PROGRAMFILES(X86)%\Norskale\Norskale Agent Host\*.log /Q"' >> $SealFolder\$SealFile
+Echo 'del "%PROGRAMFILES(X86)%\Norskale\Norskale Agent Host\*.log" /Q' >> $SealFolder\$SealFile
 Echo 'del c:\trace\*.svclog /Q' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
@@ -164,6 +166,13 @@ Copy $PSScriptRoot\Content\user-192.png $SealFolder
 Echo "#####Setting default user logon image#####" >> $SealFolder\$SealFile
 Echo "Copy $SealFolder\User-192.png 'C:\programdata\Microsoft\User Account Pictures\'" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
+
+##### .NET Framework update #####
+$netversiontest = get-childitem -path c:\windows\microsoft.net\framework -file -recurse | select-object -property directory,name | where Name -eq "ngen.exe" | select-object -property directory -last 1
+foreach ($netver in $netversiontest)
+{
+Echo "$netver\ngen.exe /update"
+}
 
 ##### insert general seal up script options #####
 Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
