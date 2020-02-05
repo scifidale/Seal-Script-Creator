@@ -168,11 +168,18 @@ Echo "Copy $SealFolder\User-192.png 'C:\programdata\Microsoft\User Account Pictu
 Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### .NET Framework update #####
-$netversiontest = get-childitem -path c:\windows\microsoft.net\framework -file -recurse | select-object -property directory,name | where Name -eq "ngen.exe" | select-object -property directory -last 1 | ft -hidetableheaders
-foreach ($netver in $netversiontest)
-{
-Echo "$netver\ngen.exe /update" >> $SealFolder\$SealFile
-}
+Echo "##### Updating .Net Framework #####" >> $SealFolder\$SealFile
+$netversiontest = get-childitem -path c:\windows\microsoft.net\framework -file -recurse | select-object -property directory,name | where Name -eq "ngen.exe" | select-object -property directory -last 1 | ft -hidetableheaders |  Out-String -stream
+Echo "CD$netversiontest" >> $SealFolder\$SealFile
+Echo ".\ngen.exe update" >> $SealFolder\$SealFile
+
+Add-Content -path $SealFolder\$SealFile -value ""
+
+$netversiontestx64 = get-childitem -path c:\windows\microsoft.net\framework64 -file -recurse | select-object -property directory,name | where Name -eq "ngen.exe" | select-object -property directory -last 1 | ft -hidetableheaders |  Out-String -stream
+Echo "CD$netversiontest64" >> $SealFolder\$SealFile
+Echo ".\ngen.exe update" >> $SealFolder\$SealFile
+
+Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### insert general seal up script options #####
 Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
