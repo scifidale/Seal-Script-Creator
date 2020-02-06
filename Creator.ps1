@@ -8,21 +8,20 @@ $SealFolder = "C:\Seal"
 $SealFile = "SealScript.ps1"
 $CompanyName = "EEC Services"
 
-$Citrix = "C:\bdlog.txt"
+
 $CitrixVDA = "C:\Program files\Citrix\Virtual Desktop Agent\BrokerAgent.exe"
 $CitrixPVS = "C:\Program files\Citrix\Provisioning Services\StatusTray.exe"
 $WEM = "C:\Program Files (x86)\Norskale\Norskale Agent Host\VUEMUIAgent.exe"
-$test = "C:\bdlog.txt"
 $FSLOGIX = "C:\Program Files\FSLogix\Apps\frx.exe"
 $Ivanti = "C:\Program Files\Appsense\Environment Manager\Agent\EMUser.exe"
 $VMware = "C:\Program files\VMware\VMware Tools\vmtoolsd.exe"
 $Systrack = "C:\Program Files (x86)\SysTrack\LSiAgent\LsiAgent.exe"
-$SymantecEP = "C:\bdlog.txt"
+$SymantecEP = "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe"
 $TrendOS = "C:\bdlog.txt"
-$MCafeeEP = "C:\bdlog.txt"
+$MCafeeEP = "C:\Program Files (x86)\McAfee\Common Framework\masvc.exe"
 $SCCM = "C:\Windows\System32\smss.exe"
-$SophosEP = "C:\BDlog.txt"
-$UberAgent = "C:\BDLOg.txt"
+$SophosEP = "C:\Program Files\Sophos\Sophos Endpoint Agent\ManagementAgentNT.exe"
+$UberAgent = "C:\Program Files\vast limits\uberAgent\uberAgent.exe"
 
 ##### OS version check #####
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
@@ -38,7 +37,7 @@ New-Item -path $SealFolder\$SealFile
 ##### Generalisation Phase #####
 Echo "# $CompanyName Seal Script" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
-# Echo "$PSScriptRoot" >> $Sealfolder\$SealFile#
+# Echo "# $PSScriptRoot" >> $Sealfolder\$SealFile#
 
 ################################################
 ##########Citrix Stack Generalisation###########
@@ -59,6 +58,10 @@ Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.log"' >> $SealFolde
 Echo 'del "C:\Windows\System32\LogFiles\UserProfileManager\*.bak"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
+
+################################################
+##########FSLogix Generalisation################
+################################################
 
 If (Test-Path "$FSLogix") {
 Echo '##### FSLogix Generalisation #####' >> $SealFolder\$SealFile
@@ -100,6 +103,10 @@ IF (Test-Path "$VMware") {
 Echo '##### Remove VMware Tools Menu Icon #####' >> $SealFolder\$SealFile
 Echo 'CMD /c RD "C:\Programdata\Microsoft\Windows\start Menu\Programs\VMware" /S /Q' >> $SealFolder\$SealFile }
 Add-Content -path $SealFolder\$SealFile -value ""
+
+################################################
+########Policy & Profile Tool Generalisation####
+################################################
 
 ##### Ivanti Sealup Actions #####
 IF (test-path "$Ivanti") {
@@ -147,9 +154,15 @@ Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### Sophos Endpoint Agent #####
 IF (Test-Path "$SophosEP") {
-Echo '##### Symantec Endpoint Protection Generalisation #####' >> $SealFolder\$SealFile
-Echo 'Net Stop "Sophos Autoupdate Service"' >> $SealFolder\$SealFile
-Echo '"ClientSideClonePrepTool.exe"' >> $SealFolder\$SealFile
+Echo '##### Sophos Endpoint Protection Generalisation #####' >> $SealFolder\$SealFile
+Echo 'Net Stop """' >> $SealFolder\$SealFile
+Echo '"sc config 'Sophos MCS' start=delayed-auto"' >> $SealFolder\$SealFile
+Echo 'Net Stop "Sophos Managed Threat Response"' >> $SealFolder\$SealFile
+Echo 'Del C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\Credentials.txt' >> $SealFolder\$SealFile
+Echo 'Del C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\EndpointIdentity.txt' >> $SealFolder\$SealFile
+Echo 'Del /Q C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\*.xml' >> $SealFolder\$SealFile
+Echo 'Del /Q C:\ProgramData\Sophos\Management Communications System\Endpoint\Cache\*.status' >> $SealFolder\$SealFile
+Echo 'Del C:\ProgramData\Sophos\AutoUpdate\data\machine_id.txt' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
@@ -161,11 +174,22 @@ Echo "$SealFolder\ImgSetup.exe" >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
+
+################################################
+##########Visual Actions #######################
+################################################
+
 ##### Default user logon image #####
 Copy $PSScriptRoot\Content\user-192.png $SealFolder 
 Echo "#####Setting default user logon image#####" >> $SealFolder\$SealFile
 Echo "Copy $SealFolder\User-192.png 'C:\programdata\Microsoft\User Account Pictures\'" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
+
+
+################################################
+##########.NET Framework Actions ###############
+################################################
+
 
 ##### .NET Framework update #####
 Echo "##### Updating .Net Framework #####" >> $SealFolder\$SealFile
@@ -181,6 +205,10 @@ Echo ".\ngen.exe update" >> $SealFolder\$SealFile
 
 Add-Content -path $SealFolder\$SealFile -value ""
 
+################################################
+##########Tidy up Actions #####################
+################################################
+
 ##### insert general seal up script options #####
 Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
 Echo 'wevtutil el | Foreach-Object {wevtutil cl "$_"}' >> $SealFolder\$SealFile
@@ -191,6 +219,7 @@ Echo 'wmic pagefileset create name="D:\pagefile.sys"' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,MaximumSize=8096' >> $SealFolder\$SealFile
 Echo 'Echo defragmenting the C Drive' >> $SealFolder\$SealFile
 Echo "defrag c: /v" >> $SealFolder\$SealFile
+Echo "Ipconfig /flushdns" >> $SealFolder\$SealScript
 Add-Content -path $SealFolder\$SealFile -value ""
 	
 ##### OS Specific Generalisations for Server 2016 #####
