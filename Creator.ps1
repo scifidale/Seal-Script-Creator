@@ -158,11 +158,13 @@ Echo '##### Sophos Endpoint Protection Generalisation #####' >> $SealFolder\$Sea
 Echo 'Net Stop """' >> $SealFolder\$SealFile
 Echo '"sc config 'Sophos MCS' start=delayed-auto"' >> $SealFolder\$SealFile
 Echo 'Net Stop "Sophos Managed Threat Response"' >> $SealFolder\$SealFile
-Echo 'Del C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\Credentials.txt' >> $SealFolder\$SealFile
-Echo 'Del C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\EndpointIdentity.txt' >> $SealFolder\$SealFile
-Echo 'Del /Q C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\*.xml' >> $SealFolder\$SealFile
-Echo 'Del /Q C:\ProgramData\Sophos\Management Communications System\Endpoint\Cache\*.status' >> $SealFolder\$SealFile
+Echo 'Del "C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\Credentials.txt"' >> $SealFolder\$SealFile
+Echo 'Del "C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\EndpointIdentity.txt"' >> $SealFolder\$SealFile
+Echo 'Del /Q "C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\*.xml"' >> $SealFolder\$SealFile
+Echo 'Del /Q "C:\ProgramData\Sophos\Management Communications System\Endpoint\Cache\*.status"' >> $SealFolder\$SealFile
 Echo 'Del C:\ProgramData\Sophos\AutoUpdate\data\machine_id.txt' >> $SealFolder\$SealFile
+Echo 'Del "C:\ProgramData\Sophos\Managed Threat Response\data\osquery.db"' >> $SealFolder\$SealFile
+Echo 'Del "C:\ProgramData\Sophos\Managed Threat Response\config\policy.xml"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
@@ -170,6 +172,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 IF (Test-Path "$TrendOS") {
 Copy "$PSScriptRoot\Content\ImgSetup.exe" $SealFolder  
 Echo '##### Trend OfficeScan Generalisation #####' >> $SealFolder\$SealFile
+Echo '##### Please Obtain ImgSetup.exe from Trend Management Server #####' >> $SealFolder\$SealFile
 Echo "$SealFolder\ImgSetup.exe" >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
