@@ -148,7 +148,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ##### Mcafee Agent 5.x #####
 IF (Test-Path "$McafeeEP") {
 Echo '##### Mcafee Agent Generalisation #####' >> $SealFolder\$SealFile
-Echo '"C:\Program Files\McAfee\Agent\maconfig -enforce -noguid"' >> $SealFolder\$SealFile
+Echo '"C:\Program Files\McAfee\Agent\maconfig.exe -enforce -noguid"' >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
