@@ -17,7 +17,7 @@ $Ivanti = "C:\Program Files\Appsense\Environment Manager\Agent\EMUser.exe"
 $VMware = "C:\Program files\VMware\VMware Tools\vmtoolsd.exe"
 $Systrack = "C:\Program Files (x86)\SysTrack\LSiAgent\LsiAgent.exe"
 $SymantecEP = "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe"
-$TrendOS = "C:\bdlog.txt"
+$TrendOS = "C:\Program Files (x86)\Trend Micro\OfficeScan"
 $MCafeeEP = "C:\Program Files (x86)\McAfee\Common Framework\masvc.exe"
 $SCCM = "C:\Windows\System32\smss.exe"
 $SophosEP = "C:\Program Files\Sophos\Sophos Endpoint Agent\ManagementAgentNT.exe"
@@ -203,7 +203,7 @@ Echo ".\ngen.exe update" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 
 $netversiontestx64 = get-childitem -path c:\windows\microsoft.net\framework64 -file -recurse | select-object -property directory,name | where Name -eq "ngen.exe" | select-object -property directory -last 1 | ft -hidetableheaders |  Out-String -stream
-Echo "CD$netversiontest64" >> $SealFolder\$SealFile
+Echo "CD$netversiontestx64" >> $SealFolder\$SealFile
 Echo ".\ngen.exe update" >> $SealFolder\$SealFile
 
 Add-Content -path $SealFolder\$SealFile -value ""
