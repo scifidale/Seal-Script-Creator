@@ -155,14 +155,14 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ##### Sophos Endpoint Agent #####
 IF (Test-Path "$SophosEP") {
 Echo '##### Sophos Endpoint Protection Generalisation #####' >> $SealFolder\$SealFile
-Echo 'Net Stop """' >> $SealFolder\$SealFile
-Echo '"sc config 'Sophos MCS' start=delayed-auto"' >> $SealFolder\$SealFile
+Echo 'Net Stop "Sophos Agent"' >> $SealFolder\$SealFile
+Echo 'SC Config "Sophos MCS" start=delayed-auto' >> $SealFolder\$SealFile
 Echo 'Net Stop "Sophos Managed Threat Response"' >> $SealFolder\$SealFile
 Echo 'Del "C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\Credentials.txt"' >> $SealFolder\$SealFile
 Echo 'Del "C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\EndpointIdentity.txt"' >> $SealFolder\$SealFile
 Echo 'Del /Q "C:\ProgramData\Sophos\Management Communications System\Endpoint\Persist\*.xml"' >> $SealFolder\$SealFile
 Echo 'Del /Q "C:\ProgramData\Sophos\Management Communications System\Endpoint\Cache\*.status"' >> $SealFolder\$SealFile
-Echo 'Del C:\ProgramData\Sophos\AutoUpdate\data\machine_id.txt' >> $SealFolder\$SealFile
+Echo 'Del "C:\ProgramData\Sophos\AutoUpdate\data\machine_id.txt"' >> $SealFolder\$SealFile
 Echo 'Del "C:\ProgramData\Sophos\Managed Threat Response\data\osquery.db"' >> $SealFolder\$SealFile
 Echo 'Del "C:\ProgramData\Sophos\Managed Threat Response\config\policy.xml"' >> $SealFolder\$SealFile
 }
@@ -220,9 +220,10 @@ Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset create name="D:\pagefile.sys"' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,MaximumSize=8096' >> $SealFolder\$SealFile
-Echo 'Echo defragmenting the C Drive' >> $SealFolder\$SealFile
+Add-Content -path $SealFolder\$SealFile -value ""
+Echo '##### Echo defragmenting the C Drive #####' >> $SealFolder\$SealFile
 Echo "defrag c: /v" >> $SealFolder\$SealFile
-Echo "Ipconfig /flushdns" >> $SealFolder\$SealScript
+Echo "Ipconfig /flushdns" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 	
 ##### OS Specific Generalisations for Server 2016 #####
