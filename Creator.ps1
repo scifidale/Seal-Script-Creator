@@ -253,15 +253,3 @@ Echo "Shutdown -s -t 60" >> $SealFolder\$SealFile
 
 
 	
-	
-	
-	##### Sample Scriptlets #####
-	##### powershell set variable #####
-	# $variable = "location" #
-	##### powershell check location exists #####
-	# If (test-path "$CitrixPVS") {Echo "REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters /V DisableTaskOffload /t REG_DWORD /d 0x1 /f" >> $SealFolder\$SealFile} # 
-	##### Capture OS Version #####
-	# Get-CimInstance Win32_OperatingSystem | select -expand Caption  # 
-	##### Powershell output to seal script #####
-	#write-output "test2" | Out-file -filepath $sealloc -append #
-	
