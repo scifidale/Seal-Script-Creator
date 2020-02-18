@@ -6,7 +6,7 @@
 
 $SealFolder = "C:\Seal"
 $SealFile = "SealScript.ps1"
-$CompanyName = "EEC Services"
+$CompanyName = "Company"
 
 
 $CitrixVDA = "C:\Program files\Citrix\Virtual Desktop Agent\BrokerAgent.exe"
