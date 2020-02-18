@@ -17,7 +17,7 @@ however $SealFolder and $SealFile will rarely need changing.
 
 $SealFolder = "C:\Seal"
 $SealFile = "SealScript.ps1"
-$CompanyName = "EEC Services"
+$CompanyName = "Company"
 
 
 Contents
