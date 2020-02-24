@@ -7,21 +7,23 @@
 $SealFolder = "C:\Seal"
 $SealFile = "SealScript.ps1"
 $CompanyName = "Company"
+$EventLog = "D:\EventLogs"
 
 
-$CitrixVDA = "C:\Program files\Citrix\Virtual Desktop Agent\BrokerAgent.exe"
-$CitrixPVS = "C:\Program files\Citrix\Provisioning Services\StatusTray.exe"
+$CitrixVDA = "C:\%ProgramFiles%\Citrix\Virtual Desktop Agent\BrokerAgent.exe"
+$CitrixPVS = "C:\%ProgramFiles%\Citrix\Provisioning Services\StatusTray.exe"
 $WEM = "C:\Program Files (x86)\Norskale\Norskale Agent Host\VUEMUIAgent.exe"
-$FSLOGIX = "C:\Program Files\FSLogix\Apps\frx.exe"
-$Ivanti = "C:\Program Files\Appsense\Environment Manager\Agent\EMUser.exe"
-$VMware = "C:\Program files\VMware\VMware Tools\vmtoolsd.exe"
+$FSLOGIX = "C:\%ProgramFiles%\FSLogix\Apps\frx.exe"
+$Ivanti = "C:\%ProgramFiles%\Appsense\Environment Manager\Agent\EMUser.exe"
+$VMware = "C:\%ProgramFiles%\VMware\VMware Tools\vmtoolsd.exe"
 $Systrack = "C:\Program Files (x86)\SysTrack\LSiAgent\LsiAgent.exe"
 $SymantecEP = "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe"
 $TrendOS = "C:\Program Files (x86)\Trend Micro\OfficeScan"
 $MCafeeEP = "C:\Program Files (x86)\McAfee\Common Framework\masvc.exe"
+$Kaspersky = "C:\Program Files (x86)\Kaspersky Lab\Endpoint Agent"
 $SCCM = "C:\Windows\System32\smss.exe"
 $SophosEP = "C:\Program Files\Sophos\Sophos Endpoint Agent\ManagementAgentNT.exe"
-$UberAgent = "C:\Program Files\vast limits\uberAgent\uberAgent.exe"
+$UberAgent = "C:\%ProgramFiles%\vast limits\uberAgent\uberAgent.exe"
 
 ##### OS version check #####
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
@@ -177,6 +179,14 @@ Echo "$SealFolder\ImgSetup.exe" >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
+##### Kaspersky Endpoint  #####
+IF (Test-Path "$KasperskyEP") {
+Echo '##### Kaspersky Endpoint Agent Generalisation #####' >> $SealFolder\$SealFile
+Echo "wevtutil sl "Kaspersky-Security-Sensor Diagnostics/Operational" /lfn:"$EventLog\KasperskySensor.evtx"" >> $SealFolder\$SealFile
+Echo "wevtutil sl "Kaspersky-Security-Soyuz/Product" /lfn:"$EventLog\KasperskySoyuz.evtx"" >> $SealFolder\$SealFile
+}
+Add-Content -path $SealFolder\$SealFile -value ""
+
 
 ################################################
 ##########Visual Actions #######################
@@ -215,6 +225,9 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ##### insert general seal up script options #####
 Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
 Echo 'wevtutil el | Foreach-Object {wevtutil cl "$_"}' >> $SealFolder\$SealFile
+Echo 'wevtutil sl Application /lfn:%EventLog\Application.evtx' >> $SealFolder\$SealFile
+Echo 'wevtutil sl System /lfn:$EventLog\System.evtx' >> $SealFolder\$SealFile
+Echo 'wevtutil sl Setup /lfn:$EventLog\Setup.evtx' >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
