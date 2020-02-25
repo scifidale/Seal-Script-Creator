@@ -184,8 +184,8 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ##### Kaspersky Endpoint  #####
 IF (Test-Path "$KasperskyEP") {
 Echo '##### Kaspersky Endpoint Agent Generalisation #####' >> $SealFolder\$SealFile
-Echo "wevtutil sl "Kaspersky-Security-Sensor Diagnostics/Operational" /lfn:"$EventLog\KasperskySensor.evtx"" >> $SealFolder\$SealFile
-Echo "wevtutil sl "Kaspersky-Security-Soyuz/Product" /lfn:"$EventLog\KasperskySoyuz.evtx"" >> $SealFolder\$SealFile
+Echo "wevtutil sl 'Kaspersky-Security-Sensor Diagnostics/Operational' "/lfn:$EventLog\KasperskySensor.evtx"" >> $SealFolder\$SealFile
+Echo "wevtutil sl 'Kaspersky-Security-Soyuz/Product' "/lfn:$EventLog\KasperskySoyuz.evtx"" >> $SealFolder\$SealFile
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
