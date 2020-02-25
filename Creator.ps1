@@ -1,29 +1,30 @@
 
 
 ##### Variable enteries #####
-##### Enter execution path here #####
-
-
+##### Custom Variables here, change paths as required #####
 $SealFolder = "C:\Seal"
 $SealFile = "SealScript.ps1"
 $CompanyName = "Company"
 $EventLog = "D:\EventLogs"
 
 
-$CitrixVDA = "C:\%ProgramFiles%\Citrix\Virtual Desktop Agent\BrokerAgent.exe"
-$CitrixPVS = "C:\%ProgramFiles%\Citrix\Provisioning Services\StatusTray.exe"
+##### DO not change #####
+If((Get-CimInStance Win32_OperatingSystem).OSArchitecture -eq "64-Bit") {$pFiles = "C:\Program Files"} Else {$pFiles = "C:\Program Files (x86)"}
+
+$CitrixVDA = "$pFiles\Citrix\Virtual Desktop Agent\BrokerAgent.exe"
+$CitrixPVS = "4pFiles\Citrix\Provisioning Services\StatusTray.exe"
 $WEM = "C:\Program Files (x86)\Norskale\Norskale Agent Host\VUEMUIAgent.exe"
-$FSLOGIX = "C:\%ProgramFiles%\FSLogix\Apps\frx.exe"
-$Ivanti = "C:\%ProgramFiles%\Appsense\Environment Manager\Agent\EMUser.exe"
-$VMware = "C:\%ProgramFiles%\VMware\VMware Tools\vmtoolsd.exe"
+$FSLOGIX = "$pFiles\FSLogix\Apps\frx.exe"
+$Ivanti = "4pFiles\Appsense\Environment Manager\Agent\EMUser.exe"
+$VMware = "$pFiles\VMware\VMware Tools\vmtoolsd.exe"
 $Systrack = "C:\Program Files (x86)\SysTrack\LSiAgent\LsiAgent.exe"
 $SymantecEP = "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe"
 $TrendOS = "C:\Program Files (x86)\Trend Micro\OfficeScan"
 $MCafeeEP = "C:\Program Files (x86)\McAfee\Common Framework\masvc.exe"
-$Kaspersky = "C:\Program Files (x86)\Kaspersky Lab\Endpoint Agent"
+$KasperskyEP = "C:\Program Files (x86)\Kaspersky Lab\Endpoint Agent"
 $SCCM = "C:\Windows\System32\smss.exe"
 $SophosEP = "C:\Program Files\Sophos\Sophos Endpoint Agent\ManagementAgentNT.exe"
-$UberAgent = "C:\%ProgramFiles%\vast limits\uberAgent\uberAgent.exe"
+$UberAgent = "$pFiles\vast limits\uberAgent\uberAgent.exe"
 
 ##### OS version check #####
 $os = Get-CimInstance Win32_OperatingSystem | Select -expand Caption
