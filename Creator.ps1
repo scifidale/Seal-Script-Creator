@@ -225,11 +225,11 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ################################################
 
 ##### insert general seal up script options #####
-Echo '##### Final General Actions #####' >> $SealFolder\$SealFile
-Echo 'wevtutil el | Foreach-Object {wevtutil cl "$_"}' >> $SealFolder\$SealFile
-Echo 'wevtutil sl Application /lfn:%EventLog\Application.evtx' >> $SealFolder\$SealFile
-Echo 'wevtutil sl System /lfn:$EventLog\System.evtx' >> $SealFolder\$SealFile
-Echo 'wevtutil sl Setup /lfn:$EventLog\Setup.evtx' >> $SealFolder\$SealFile
+Echo "##### Final General Actions #####" >> $SealFolder\$SealFile
+Echo "wevtutil el | Foreach-Object {wevtutil cl "$_"}'" >> $SealFolder\$SealFile
+Echo "wevtutil sl Application /lfn:$EventLog\Application.evtx" >> $SealFolder\$SealFile
+Echo "wevtutil sl System /lfn:$EventLog\System.evtx" >> $SealFolder\$SealFile
+Echo "wevtutil sl Setup /lfn:$EventLog\Setup.evtx" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
