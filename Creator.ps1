@@ -12,10 +12,10 @@ $EventLog = "D:\EventLogs"
 If((Get-CimInStance Win32_OperatingSystem).OSArchitecture -eq "64-Bit") {$pFiles = "C:\Program Files"} Else {$pFiles = "C:\Program Files (x86)"}
 
 $CitrixVDA = "$pFiles\Citrix\Virtual Desktop Agent\BrokerAgent.exe"
-$CitrixPVS = "4pFiles\Citrix\Provisioning Services\StatusTray.exe"
+$CitrixPVS = "$pFiles\Citrix\Provisioning Services\StatusTray.exe"
 $WEM = "C:\Program Files (x86)\Norskale\Norskale Agent Host\VUEMUIAgent.exe"
 $FSLOGIX = "$pFiles\FSLogix\Apps\frx.exe"
-$Ivanti = "4pFiles\Appsense\Environment Manager\Agent\EMUser.exe"
+$Ivanti = "$pFiles\Appsense\Environment Manager\Agent\EMUser.exe"
 $VMware = "$pFiles\VMware\VMware Tools\vmtoolsd.exe"
 $Systrack = "C:\Program Files (x86)\SysTrack\LSiAgent\LsiAgent.exe"
 $SymantecEP = "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\smc.exe"
@@ -226,13 +226,13 @@ Add-Content -path $SealFolder\$SealFile -value ""
 
 ##### insert general seal up script options #####
 Echo "##### Final General Actions #####" >> $SealFolder\$SealFile
-Echo "wevtutil el | Foreach-Object {wevtutil cl "$_"}'" >> $SealFolder\$SealFile
+Echo 'wevtutil el | Foreach-Object {wevtutil cl `"$_`"}' >> $SealFolder\$SealFile
 Echo "wevtutil sl Application /lfn:$EventLog\Application.evtx" >> $SealFolder\$SealFile
 Echo "wevtutil sl System /lfn:$EventLog\System.evtx" >> $SealFolder\$SealFile
 Echo "wevtutil sl Setup /lfn:$EventLog\Setup.evtx" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
-Echo 'wmic pagefileset where name="C:\\pagefile.sys" delete' >> $SealFolder\$SealFile
+Echo 'wmic pagefileset delete' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset create name="D:\pagefile.sys"' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,MaximumSize=8096' >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
