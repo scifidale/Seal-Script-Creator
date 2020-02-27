@@ -234,7 +234,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset delete' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset create name="D:\pagefile.sys"' >> $SealFolder\$SealFile
-Echo 'wmic pagefileset where name="D:\\pagefile.sys" set InitialSize=512,MaximumSize=8096' >> $SealFolder\$SealFile
+Echo 'wmic pagefileset where name=`"D:\\pagefile.sys`" set InitialSize=512,MaximumSize=8096' >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
 Echo '##### Echo defragmenting the C Drive #####' >> $SealFolder\$SealFile
 Echo "defrag c: /v" >> $SealFolder\$SealFile
