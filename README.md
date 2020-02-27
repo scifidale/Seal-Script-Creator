@@ -18,12 +18,33 @@ however $SealFolder and $SealFile will rarely need changing.
 $SealFolder = "C:\Seal"
 $SealFile = "SealScript.ps1"
 $CompanyName = "Company"
-
+$EventLog = "D:\EventLogs"
 
 Contents
 Creator.ps1 -- Seal script creator 
 SealScript.CMD -- example script created by Creator.ps1
 README -- This document 
+
+
+Release Radar 
+Beta v0.1 CURRENT	
+Initial release of the seal script creator including sealscript actions for the following items: 
+Citrix VDA 
+Citrix PVS Tools
+Citrix WEM 
+Microsoft FSLogix 
+Ivanti Environment Management
+VMware Tools 
+Lakesie Systrack 
+Symantec Endpoint Protection 
+Trend OS 
+Macfee Endpoint Protection 
+Kaspersky Endpoint Protection 
+Microsoft SCCM 
+Sophos Antivirus 
+UberAgent 
+General Operating system sealup actions
+
 
 Date 03/01/2020 
 Author Dale Scriven
