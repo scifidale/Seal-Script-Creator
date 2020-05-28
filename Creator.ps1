@@ -43,6 +43,11 @@ Add-Content -path $SealFolder\$SealFile -value ""
 # Echo "# $PSScriptRoot" >> $Sealfolder\$SealFile#
 
 ################################################
+##########Starting Log File###########
+################################################
+Echo 'Start-transcript -path "$SealFolder\Action.log"' >> $SealFolder\$SealFile
+
+################################################
 ##########Citrix Stack Generalisation###########
 ################################################
 
@@ -225,21 +230,30 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ################################################
 
 ##### insert general seal up script options #####
+
+##### Event Log scrubbing #####
 Echo "##### Final General Actions #####" >> $SealFolder\$SealFile
 Echo 'wevtutil el | Foreach-Object {wevtutil cl `"$_`"}' >> $SealFolder\$SealFile
 Echo "wevtutil sl Application /lfn:$EventLog\Application.evtx" >> $SealFolder\$SealFile
 Echo "wevtutil sl System /lfn:$EventLog\System.evtx" >> $SealFolder\$SealFile
 Echo "wevtutil sl Setup /lfn:$EventLog\Setup.evtx" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
+##### Pagefile settings #####
 Echo '##### Pagefile settings #####' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset delete' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset create name="D:\pagefile.sys"' >> $SealFolder\$SealFile
 Echo 'wmic pagefileset where name=`"D:\\pagefile.sys`" set InitialSize=512,MaximumSize=8096' >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
+##### Defrag and ipconfig#####
 Echo '##### Echo defragmenting the C Drive #####' >> $SealFolder\$SealFile
 Echo "defrag c: /v" >> $SealFolder\$SealFile
 Echo "Ipconfig /flushdns" >> $SealFolder\$SealFile
 Add-Content -path $SealFolder\$SealFile -value ""
+##### Delete local profiles #####
+Echo '#### Deleting local profiles ####'  >> $SealFolder\$SealFile
+Copy "$PSScriptRoot\Content\Delprof2.exe" $SealFolder  
+Echo ".\Delprof2.exe /u /ntuserini /i /ed:$env:USERNAME"  >> $SealFolder\$SealFile
+
 	
 ##### OS Specific Generalisations for Server 2016 #####
 IF ($OS -eq "Microsoft Windows Server 2016") {
@@ -262,9 +276,17 @@ Echo 'powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' >> $SealFold
 }
 Add-Content -path $SealFolder\$SealFile -value ""
 
+
+################################################
+####Stopping log  error check and shutdown######
+################################################
+
+Echo "If ($error.count -ne 0) {Write-Host "Errors have occured please check log file for details" -foregroundcolor black -backgroundcolor Red} Else {}" >> $SealFolder\$SealFile
+
+Echo "Stop-transcript" >> $SealFolder\$SealFile
+
 ##### Shutdown the image #####
 Echo "##### Shutting down the Image #####" >> $SealFolder\$SealFile
-Echo "Shutdown -s -t 60" >> $SealFolder\$SealFile
-
+Echo "Stop-Computer -Confirm -Force" >> $SealFolder\$SealFile
 
 	
