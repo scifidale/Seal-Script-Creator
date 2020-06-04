@@ -215,13 +215,13 @@ Add-Content -path $SealFolder\$SealFile -value ""
 Echo "##### Updating .Net Framework #####" >> $SealFolder\$SealFile
 $netversiontest = get-childitem -path c:\windows\microsoft.net\framework -file -recurse | select-object -property directory,name | where Name -eq "ngen.exe" | select-object -property directory -last 1 | ft -hidetableheaders |  Out-String -stream
 Echo "CD$netversiontest" >> $SealFolder\$SealFile
-Echo ".\ngen.exe update" >> $SealFolder\$SealFile
+Echo ".\ngen.exe update | Out-Null" >> $SealFolder\$SealFile
 
 Add-Content -path $SealFolder\$SealFile -value ""
 
 $netversiontestx64 = get-childitem -path c:\windows\microsoft.net\framework64 -file -recurse | select-object -property directory,name | where Name -eq "ngen.exe" | select-object -property directory -last 1 | ft -hidetableheaders |  Out-String -stream
 Echo "CD$netversiontestx64" >> $SealFolder\$SealFile
-Echo ".\ngen.exe update" >> $SealFolder\$SealFile
+Echo ".\ngen.exe update | Out-Null" >> $SealFolder\$SealFile
 
 Add-Content -path $SealFolder\$SealFile -value ""
 
@@ -252,7 +252,7 @@ Add-Content -path $SealFolder\$SealFile -value ""
 ##### Delete local profiles #####
 Echo '#### Deleting local profiles ####'  >> $SealFolder\$SealFile
 Copy "$PSScriptRoot\Content\Delprof2.exe" $SealFolder  
-Echo ".\Delprof2.exe /u /ntuserini /i /ed:$env:USERNAME"  >> $SealFolder\$SealFile
+Echo ".\Content\Delprof2.exe /u /ntuserini /i /ed:$env:USERNAME"  >> $SealFolder\$SealFile
 
 	
 ##### OS Specific Generalisations for Server 2016 #####
