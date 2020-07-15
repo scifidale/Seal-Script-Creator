@@ -98,6 +98,8 @@ Echo 'MKDIR D:\SystrackDB\' >> $SealFolder\$SealFile
  }
 Add-Content -path $SealFolder\$SealFile -value ""
 
+
+##### UberAgent #####
 if (test-path "$UberAgent") {
 Echo '##### UberAgent Generalisation #####' >> $SealFolder\$SealFile
 Echo "Net Stop uberAgent" >> $SealFolder\$SealFile
@@ -105,6 +107,19 @@ Echo 'REG DELETE "HKLM\SOFTWARE\vast limits\uberAgent" /f /reg:64' >> $SealFolde
 
  }
 Add-Content -path $SealFolder\$SealFile -value ""
+
+
+##### Microsoft SCCM Client  #####
+if (test-path "$SCCM") {
+Echo '##### Microsoft SCCM Agent #####' >> $SealFolder\$SealFile
+Echo "net stop ccmexec" >> $SealFolder\$SealFile
+Echo "ping -n 5 localhost" >> $SealFolder\$SealFile
+Echo "del /q C:\Windows\SMSCFG.ini" >> $SealFolder\$SealFile
+Echo "certutil -delstore SMS SMS" >> $SealFolder\$SealFile
+Echo 'WMIC /namespace:\\root\ccm\invagt path inventoryActionStatus where InventoryActionID="{00000000-0000-0000-0000-000000000001}" DELETE /NOINTERACTIVE' >> $SealFolder\$SealFile
+Add-Content -path $SealFolder\$SealFile -value ""
+
+ }
 
 ##### VMware Tools cleanup #####
 IF (Test-Path "$VMware") {
