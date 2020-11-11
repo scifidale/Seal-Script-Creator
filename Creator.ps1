@@ -268,6 +268,9 @@ Add-Content -path $SealFolder\$SealFile -value ""
 Echo '#### Deleting local profiles ####'  >> $SealFolder\$SealFile
 Copy "$PSScriptRoot\Content\Delprof2.exe" $SealFolder  
 Echo ".\Content\Delprof2.exe /u /ntuserini /i /ed:$env:USERNAME"  >> $SealFolder\$SealFile
+##### Removing Admin Shares #####
+Echo '#Disabling Admin Shares'   >> $SealFolder\$SealFile
+Echo 'REG ADD "HKEY_LOCAL_MACHINE Key: SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /v AutoShareServer /t REG_DWORD /d 0x0 /f' >> $SealFolder\$SealFile
 
 	
 ##### OS Specific Generalisations for Server 2016 #####
